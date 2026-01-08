@@ -1,0 +1,32 @@
+{
+  "recommendations": [
+    // === COPILOT ===
+    "github.copilot",
+    "github.copilot-chat",
+    
+    // === REACT NATIVE ===
+    "msjsdiag.vscode-react-native",
+    "dsznajder.es7-react-js-snippets",
+    
+    // === TYPESCRIPT ===
+    "ms-vscode.vscode-typescript-next",
+    
+    // === CODE QUALITY ===
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    
+    // === GIT ===
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+    
+    // === FIREBASE ===
+    "toba.vsfire",
+    
+    // === TESTING ===
+    "orta.vscode-jest",
+    
+    // === MARKDOWN ===
+    "yzhang.markdown-all-in-one",
+    "bierner.markdown-preview-github-styles"
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  // === COPILOT INSTRUCTIONS ===
+  "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+  
+  // Commit Message Generation
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "file": ".github/commit-message-instructions.md"
+    }
+  ],
+  
+  // Code Review
+  "github.copilot.chat.reviewSelection.instructions": [
+    {
+      "file": ".github/review-instructions.md"
+    }
+  ],
+  
+  // Pull Request Description
+  "github.copilot.chat.pullRequestDescriptionGeneration.instructions": [
+    {
+      "file": ".github/pr-instructions.md"
+    }
+  ],
+  
+  // Test Generation
+  "github.copilot.chat.testGeneration.instructions": [
+    {
+      "file": ".github/test-instructions.md"
+    }
+  ],
+  
+  // === COPILOT FEATURES ===
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": false,
+    "markdown": true,
+    "scminput": true
+  },
+  "github.copilot.editor.enableCodeActions": true,
+  "github.copilot.chat.localeOverride": "de",
+  
+  // === TYPESCRIPT ===
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.suggest.autoImports": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  
+  // === EDITOR ===
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  
+  // === FILES ===
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/.git": true,
+    "**/ios/Pods": true,
+    "**/android/.gradle": true
+  },
+  
+  // === SEARCH ===
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/ios/Pods": true,
+    "**/android/build": true,
+    "**/.gradle": true
+  },
+  
+  // === REACT NATIVE ===
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  
+  // === TERMINAL ===
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "terminal.integrated.cwd": "${workspaceFolder}"
+}

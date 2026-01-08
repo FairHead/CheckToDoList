@@ -50,7 +50,7 @@ const PhoneVerificationScreen: React.FC<Props> = ({ navigation, route }) => {
 
     setLoading(true);
     try {
-      const { confirmation, displayName, isNewUser } = route.params || {};
+      const { confirmation, fromEmailVerification, isNewUser } = route.params || {};
       
       if (!confirmation) {
         Alert.alert('Error', 'Verification session expired. Please try again.');
@@ -62,19 +62,20 @@ const PhoneVerificationScreen: React.FC<Props> = ({ navigation, route }) => {
       const userCredential = await authService.confirmPhoneCode(confirmation, code);
       const user = userCredential.user;
 
-      // For new users: Update profile with displayName and create user document
-      if (isNewUser) {
-        if (displayName) {
-          await user.updateProfile({ displayName });
+      // If coming from email verification, mark phone as verified
+      if (fromEmailVerification && isNewUser) {
+        await authService.markPhoneAsVerified(user.uid);
+      } else if (isNewUser) {
+        // Legacy flow: create basic user document if needed
+        const userProfile = await authService.getUserProfile(user.uid);
+        if (!userProfile) {
+          await authService.createUserDocument(user, {});
         }
-        
-        // Create user document in Database
-        await authService.createUserDocument(user, { displayName });
       } else {
         // For existing users: Check if user document exists, if not create it
         const userProfile = await authService.getUserProfile(user.uid);
         if (!userProfile) {
-          await authService.createUserDocument(user, { displayName: user.displayName || undefined });
+          await authService.createUserDocument(user, {});
         }
       }
 

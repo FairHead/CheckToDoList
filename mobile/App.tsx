@@ -25,6 +25,8 @@ import { AuthProvider, useAuth } from './src/contexts/AuthContext';
 import WelcomeScreen from './src/screens/auth/WelcomeScreen';
 import LoginScreen from './src/screens/auth/LoginScreen';
 import RegisterScreen from './src/screens/auth/RegisterScreen';
+import RegisterStep2Screen from './src/screens/auth/RegisterStep2Screen';
+import EmailVerificationScreen from './src/screens/auth/EmailVerificationScreen';
 import PhoneVerificationScreen from './src/screens/auth/PhoneVerificationScreen';
 
 // Constants
@@ -47,6 +49,8 @@ const AuthNavigator = () => {
       <Stack.Screen name={ROUTES.WELCOME} component={WelcomeScreen} />
       <Stack.Screen name={ROUTES.LOGIN} component={LoginScreen} />
       <Stack.Screen name={ROUTES.REGISTER} component={RegisterScreen} />
+      <Stack.Screen name={ROUTES.REGISTER_STEP2} component={RegisterStep2Screen} />
+      <Stack.Screen name={ROUTES.EMAIL_VERIFICATION} component={EmailVerificationScreen} />
       <Stack.Screen name={ROUTES.PHONE_VERIFICATION} component={PhoneVerificationScreen} />
     </Stack.Navigator>
   );

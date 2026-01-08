@@ -27,21 +27,21 @@ const WelcomeScreen: React.FC<Props> = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>CheckToDoList</Text>
-      <Text style={styles.subtitle}>Share lists with friends and family</Text>
+      <Text style={styles.subtitle}>Listen mit Freunden und Familie teilen</Text>
       
       <View style={styles.buttonContainer}>
         <TouchableOpacity 
           style={styles.primaryButton}
           onPress={() => navigation.navigate(ROUTES.AUTH.LOGIN)}
         >
-          <Text style={styles.primaryButtonText}>Sign In</Text>
+          <Text style={styles.primaryButtonText}>Anmelden</Text>
         </TouchableOpacity>
         
         <TouchableOpacity 
           style={styles.secondaryButton}
           onPress={() => navigation.navigate(ROUTES.AUTH.REGISTER)}
         >
-          <Text style={styles.secondaryButtonText}>Create Account</Text>
+          <Text style={styles.secondaryButtonText}>Konto erstellen</Text>
         </TouchableOpacity>
       </View>
     </View>

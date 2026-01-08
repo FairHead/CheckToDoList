@@ -1,9 +1,11 @@
 export const ROUTES = {
-  // Auth
-  WELCOME: 'Welcome',
-  LOGIN: 'Login',
-  REGISTER: 'Register',
-  PHONE_VERIFICATION: 'PhoneVerification',
+  // Auth Stack
+  AUTH: {
+    WELCOME: 'Welcome',
+    LOGIN: 'Login',
+    REGISTER: 'Register',
+    PHONE_VERIFICATION: 'PhoneVerification',
+  },
 
   // Main Tabs
   MY_LISTS_TAB: 'MyListsTab',

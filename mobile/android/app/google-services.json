@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "583061680780",
+    "firebase_url": "https://checktodolist-dbfed-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "checktodolist-dbfed",
+    "storage_bucket": "checktodolist-dbfed.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:583061680780:android:c8b69d60b11c315ee701a9",
+        "android_client_info": {
+          "package_name": "com.checktodolist"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDK512mkCAWoZ_PxDVwZEHn93HhYVyXWLc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

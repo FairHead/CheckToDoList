@@ -1,30 +1,45 @@
 /**
  * Firebase Configuration
- * 
- * TODO: Replace with your Firebase project config from:
- * Firebase Console → Project Settings → Your apps → Config
+ *
+ * Firebase Project: CheckToDoList
+ * Project ID: checktodolist-dbfed
+ *
+ * Native config files are located at:
+ * - Android: android/app/google-services.json
+ * - iOS: ios/GoogleService-Info.plist
  */
 
-import { Platform } from 'react-native';
+import { Platform } from "react-native";
 
-// Firebase Web Config (for reference)
+// Firebase Config (für Referenz und eventuelle Web-Nutzung)
 export const firebaseConfig = {
-  apiKey: 'YOUR_API_KEY',
-  authDomain: 'YOUR_PROJECT_ID.firebaseapp.com',
-  databaseURL: 'https://YOUR_PROJECT_ID-default-rtdb.europe-west1.firebasedatabase.app',
-  projectId: 'YOUR_PROJECT_ID',
-  storageBucket: 'YOUR_PROJECT_ID.appspot.com',
-  messagingSenderId: 'YOUR_SENDER_ID',
-  appId: 'YOUR_APP_ID',
+  apiKey: Platform.select({
+    ios: "AIzaSyAOOuWddSTg6KX6eR26uY2-5vioqK4SZEs",
+    android: "AIzaSyDK512mkCAWoZ_PxDVwZEHn93HhYVyXWLc",
+  }),
+  authDomain: "checktodolist-dbfed.firebaseapp.com",
+  databaseURL:
+    "https://checktodolist-dbfed-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "checktodolist-dbfed",
+  storageBucket: "checktodolist-dbfed.firebasestorage.app",
+  messagingSenderId: "583061680780",
+  appId: Platform.select({
+    ios: "1:583061680780:ios:60cc585f35ce7105e701a9",
+    android: "1:583061680780:android:c8b69d60b11c315ee701a9",
+  }),
 };
 
 /**
- * Note: For React Native Firebase, configuration is done via:
- * - Android: google-services.json in android/app/
- * - iOS: GoogleService-Info.plist in ios/
- * 
- * Download these files from Firebase Console.
+ * React Native Firebase nutzt die nativen Config-Dateien automatisch:
+ * - google-services.json für Android
+ * - GoogleService-Info.plist für iOS
+ *
+ * Die obige firebaseConfig ist nur für Referenz/Debugging.
  */
 
-export const isAndroid = Platform.OS === 'android';
-export const isIOS = Platform.OS === 'ios';
+export const isAndroid = Platform.OS === "android";
+export const isIOS = Platform.OS === "ios";
+
+// Firebase Project IDs für einfachen Zugriff
+export const FIREBASE_PROJECT_ID = "checktodolist-dbfed";
+export const FIREBASE_MESSAGING_SENDER_ID = "583061680780";

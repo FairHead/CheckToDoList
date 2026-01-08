@@ -21,7 +21,7 @@ const colors = {
   // Status
   success: '#4CAF50',
   error: '#D32F2F',
-  danger: '#D32F2F', // Alias für error
+  danger: '#D32F2F', // Alias for error
   warning: '#FF9800',
 
   // Border

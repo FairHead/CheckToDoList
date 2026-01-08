@@ -104,6 +104,8 @@ export const sendPhoneVerification = async (
 
 /**
  * Confirm phone verification code
+ * 
+ * @returns UserCredential containing the authenticated user
  */
 export const confirmPhoneCode = async (
   confirmationResult: FirebaseAuthTypes.ConfirmationResult,
@@ -155,8 +157,8 @@ export const createUserDocument = async (
         notificationsEnabled: true,
         soundEnabled: true,
       },
-      createdAt: database.ServerValue.TIMESTAMP as any,
-      updatedAt: database.ServerValue.TIMESTAMP as any,
+      createdAt: database.ServerValue.TIMESTAMP as unknown as number,
+      updatedAt: database.ServerValue.TIMESTAMP as unknown as number,
     };
 
     await userRef.set(userData);

@@ -92,7 +92,7 @@ const PhoneVerificationScreen: React.FC<Props> = ({ navigation, route }) => {
       }
       
       Alert.alert('Verification Failed', message);
-      setCode(''); // Code zurücksetzen bei Fehler
+      setCode(''); // Reset code on error
     } finally {
       setLoading(false);
     }

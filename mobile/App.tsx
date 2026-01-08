@@ -106,7 +106,7 @@ const AppRoot = () => {
 };
 
 /**
- * App Component mit AuthProvider
+ * App Component with AuthProvider
  */
 function App(): React.JSX.Element {
   return (

@@ -3,6 +3,8 @@ export const ROUTES = {
   WELCOME: 'Welcome',
   LOGIN: 'Login',
   REGISTER: 'Register',
+  REGISTER_STEP2: 'RegisterStep2',
+  EMAIL_VERIFICATION: 'EmailVerification',
   PHONE_VERIFICATION: 'PhoneVerification',
 
   // Main Tabs

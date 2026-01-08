@@ -5,12 +5,15 @@
 ## Priority: 🔴 Critical
 
 ## Dependencies
+
 - ✅ Issue #1 (Project Setup) - COMPLETED
 
 ## Description
+
 Implement phone number authentication using Firebase Phone Auth. Users should be able to sign up and sign in using their phone number with SMS verification.
 
 ## Acceptance Criteria
+
 - [ ] User can enter phone number on login/register screen
 - [ ] SMS verification code is sent to phone number
 - [ ] User can enter 6-digit verification code
@@ -23,6 +26,7 @@ Implement phone number authentication using Firebase Phone Auth. Users should be
 ## Implementation Steps
 
 ### 1. Implement authService.ts
+
 Complete all TODO items in `mobile/src/services/authService.ts`:
 
 ```typescript
@@ -39,25 +43,31 @@ export const verifyCode = async (confirmation: any, code: string) => {
 };
 
 // Create user profile in database
-export const createUserProfile = async (user: FirebaseAuthTypes.User, displayName: string) => {
+export const createUserProfile = async (
+  user: FirebaseAuthTypes.User,
+  displayName: string
+) => {
   await database().ref(`users/${user.uid}`).set({
     displayName,
     phoneNumber: user.phoneNumber,
     createdAt: database.ServerValue.TIMESTAMP,
     ownedLists: {},
     sharedLists: {},
-    pendingInvitations: {}
+    pendingInvitations: {},
   });
 };
 ```
 
 ### 2. Complete Auth Screens
+
 Update the screen components in `mobile/src/screens/auth/`:
+
 - `LoginScreen.tsx` - Implement handleSendCode
-- `RegisterScreen.tsx` - Implement handleRegister  
+- `RegisterScreen.tsx` - Implement handleRegister
 - `PhoneVerificationScreen.tsx` - Implement handleVerifyCode, handleResendCode
 
 ### 3. Auth State Listener
+
 Create auth state hook to listen for auth changes:
 
 ```typescript
@@ -79,6 +89,7 @@ export const useAuth = () => {
 ```
 
 ### 4. Navigation Setup
+
 Configure navigation to show auth screens for unauthenticated users:
 
 ```typescript
@@ -97,6 +108,7 @@ const App = () => {
 ```
 
 ## Files to Modify
+
 - `mobile/src/services/authService.ts` - Complete all functions
 - `mobile/src/screens/auth/LoginScreen.tsx` - Implement auth flow
 - `mobile/src/screens/auth/RegisterScreen.tsx` - Implement registration
@@ -105,6 +117,7 @@ const App = () => {
 - `mobile/App.tsx` - Create with navigation (new file)
 
 ## Database Structure
+
 ```
 users/
   {userId}/
@@ -117,6 +130,7 @@ users/
 ```
 
 ## Testing
+
 - [ ] Can send SMS to valid phone number
 - [ ] Can verify correct 6-digit code
 - [ ] Invalid code shows error message
@@ -126,6 +140,7 @@ users/
 - [ ] App navigates to main screen after auth
 
 ## References
+
 - [Firebase Phone Auth](https://rnfirebase.io/auth/phone-auth)
 - `mobile/src/screens/auth/` - Screen stubs with UI already created
 - `mobile/src/services/authService.ts` - Service stub with TODOs

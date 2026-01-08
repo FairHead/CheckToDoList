@@ -1,8 +1,7 @@
 /**
  * Login Screen
  * 
- * Phone number authentication entry.
- * Uses Firebase Phone Auth.
+ * Email/password authentication entry with remember me option.
  * 
  * @see docs/MOBILE_APP_SPECIFICATION.md - Authentication Flow
  */
@@ -15,85 +14,191 @@ import {
   TextInput, 
   TouchableOpacity,
   ActivityIndicator,
-  Alert 
+  Alert,
+  KeyboardAvoidingView,
+  Platform
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { COLORS } from '../../constants/colors';
 import { ROUTES } from '../../constants/routes';
-import { authService } from '../../services';
+import * as authService from '../../services/authService';
+import { validateEmail } from '../../utils/validation';
 
 type Props = {
   navigation: NativeStackNavigationProp<any>;
 };
 
 const LoginScreen: React.FC<Props> = ({ navigation }) => {
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  const handleSendCode = async () => {
-    // TODO: Implement - Issue #2
-    // 1. Validate phone number format
-    // 2. Call authService.signInWithPhone(phoneNumber)
-    // 3. Navigate to PhoneVerificationScreen with confirmation result
-    // 4. Handle errors (invalid number, rate limit, etc.)
-    
-    if (!phoneNumber) {
-      Alert.alert('Error', 'Please enter your phone number');
+  const handleLogin = async () => {
+    // Validate email
+    const emailValidation = validateEmail(email);
+    if (!emailValidation.isValid) {
+      Alert.alert('Error', emailValidation.error);
+      return;
+    }
+
+    if (!password) {
+      Alert.alert('Error', 'Please enter your password');
       return;
     }
 
     setLoading(true);
     try {
-      // const confirmation = await authService.signInWithPhone(phoneNumber);
-      // navigation.navigate(ROUTES.AUTH.PHONE_VERIFICATION, { confirmation, phoneNumber });
-      Alert.alert('Not Implemented', 'Issue #2 - Phone authentication');
+      await authService.login(email.trim().toLowerCase(), password);
+      
+      // Update last login
+      const currentUser = authService.getCurrentUser();
+      if (currentUser) {
+        await authService.updateLastLogin(currentUser.uid);
+      }
+
+      // Navigation is handled by AuthContext
     } catch (error: any) {
-      Alert.alert('Error', error.message);
+      let message = 'Login failed. Please check your credentials.';
+      
+      if (error.code === 'auth/user-not-found') {
+        message = 'No account found with this email.';
+      } else if (error.code === 'auth/wrong-password') {
+        message = 'Incorrect password. Please try again.';
+      } else if (error.code === 'auth/invalid-email') {
+        message = 'Invalid email address.';
+      } else if (error.code === 'auth/user-disabled') {
+        message = 'This account has been disabled.';
+      } else if (error.message) {
+        message = error.message;
+      }
+      
+      Alert.alert('Error', message);
     } finally {
       setLoading(false);
     }
   };
 
+  const handleForgotPassword = () => {
+    if (!email) {
+      Alert.alert(
+        'Forgot Password',
+        'Please enter your email address first, then tap Forgot Password again.',
+        [{ text: 'OK' }]
+      );
+      return;
+    }
+
+    Alert.alert(
+      'Reset Password',
+      `Send password reset email to ${email}?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Send',
+          onPress: async () => {
+            try {
+              await authService.resetPassword(email.trim().toLowerCase());
+              Alert.alert(
+                'Success',
+                'Password reset email sent! Please check your inbox.'
+              );
+            } catch (error: any) {
+              Alert.alert('Error', 'Failed to send reset email. Please try again.');
+            }
+          },
+        },
+      ]
+    );
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Sign In</Text>
+    <KeyboardAvoidingView 
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <Text style={styles.title}>Welcome Back</Text>
       <Text style={styles.subtitle}>
-        Enter your phone number to receive a verification code
+        Sign in to continue
       </Text>
 
+      {/* Email */}
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          placeholder="+49 123 456789"
+          placeholder="Email"
           placeholderTextColor={COLORS.textSecondary}
-          value={phoneNumber}
-          onChangeText={setPhoneNumber}
-          keyboardType="phone-pad"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
           autoFocus
         />
       </View>
 
+      {/* Password */}
+      <View style={styles.inputContainer}>
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={styles.passwordInput}
+            placeholder="Password"
+            placeholderTextColor={COLORS.textSecondary}
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!showPassword}
+            autoCapitalize="none"
+          />
+          <TouchableOpacity
+            style={styles.eyeIcon}
+            onPress={() => setShowPassword(!showPassword)}
+          >
+            <Text style={styles.eyeIconText}>{showPassword ? '👁️' : '👁️‍🗨️'}</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Remember Me & Forgot Password */}
+      <View style={styles.optionsRow}>
+        <TouchableOpacity 
+          style={styles.checkboxContainer}
+          onPress={() => setRememberMe(!rememberMe)}
+        >
+          <View style={[styles.checkbox, rememberMe && styles.checkboxChecked]}>
+            {rememberMe && <Text style={styles.checkmark}>✓</Text>}
+          </View>
+          <Text style={styles.checkboxLabel}>Remember me</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={handleForgotPassword}>
+          <Text style={styles.forgotPassword}>Forgot Password?</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Login Button */}
       <TouchableOpacity 
         style={[styles.button, loading && styles.buttonDisabled]}
-        onPress={handleSendCode}
+        onPress={handleLogin}
         disabled={loading}
       >
         {loading ? (
           <ActivityIndicator color={COLORS.primary} />
         ) : (
-          <Text style={styles.buttonText}>Send Verification Code</Text>
+          <Text style={styles.buttonText}>Sign In</Text>
         )}
       </TouchableOpacity>
 
+      {/* Register Link */}
       <TouchableOpacity 
         style={styles.linkButton}
-        onPress={() => navigation.navigate(ROUTES.AUTH.REGISTER)}
+        onPress={() => navigation.navigate(ROUTES.REGISTER)}
       >
         <Text style={styles.linkText}>
           Don't have an account? <Text style={styles.linkTextBold}>Sign Up</Text>
         </Text>
       </TouchableOpacity>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -117,14 +222,70 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   inputContainer: {
-    marginBottom: 20,
+    marginBottom: 16,
   },
   input: {
     backgroundColor: COLORS.contentBackground,
     borderRadius: 8,
     padding: 16,
-    fontSize: 18,
+    fontSize: 16,
     color: COLORS.text,
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.contentBackground,
+    borderRadius: 8,
+  },
+  passwordInput: {
+    flex: 1,
+    padding: 16,
+    fontSize: 16,
+    color: COLORS.text,
+  },
+  eyeIcon: {
+    padding: 16,
+  },
+  eyeIconText: {
+    fontSize: 20,
+  },
+  optionsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: COLORS.white,
+    marginRight: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkboxChecked: {
+    backgroundColor: COLORS.white,
+  },
+  checkmark: {
+    color: COLORS.primary,
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  checkboxLabel: {
+    color: COLORS.white,
+    fontSize: 14,
+  },
+  forgotPassword: {
+    color: COLORS.white,
+    fontSize: 14,
+    fontWeight: '500',
+    textDecorationLine: 'underline',
   },
   button: {
     backgroundColor: COLORS.white,

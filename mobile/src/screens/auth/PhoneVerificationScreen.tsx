@@ -19,7 +19,7 @@ import {
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
 import { COLORS } from '../../constants/colors';
-import { authService } from '../../services';
+import * as authService from '../../services/authService';
 
 type Props = {
   navigation: NativeStackNavigationProp<any>;
@@ -43,13 +43,6 @@ const PhoneVerificationScreen: React.FC<Props> = ({ navigation, route }) => {
   }, [countdown]);
 
   const handleVerifyCode = async () => {
-    // TODO: Implement - Issue #2
-    // 1. Validate code length
-    // 2. Confirm code with Firebase: confirmation.confirm(code)
-    // 3. If new user, update profile with displayName
-    // 4. Create user document in database
-    // 5. Navigate to main app
-    
     if (code.length !== CODE_LENGTH) {
       Alert.alert('Error', 'Please enter the 6-digit code');
       return;
@@ -57,27 +50,88 @@ const PhoneVerificationScreen: React.FC<Props> = ({ navigation, route }) => {
 
     setLoading(true);
     try {
-      // const { confirmation, displayName, isNewUser } = route.params;
-      // await confirmation.confirm(code);
-      // 
-      // if (isNewUser && displayName) {
-      //   await authService.updateProfile({ displayName });
-      // }
-      Alert.alert('Not Implemented', 'Issue #2 - Code verification');
+      const { confirmation, fromEmailVerification, isNewUser } = route.params || {};
+      
+      if (!confirmation) {
+        Alert.alert('Error', 'Verification session expired. Please try again.');
+        navigation.goBack();
+        return;
+      }
+
+      // Confirm the verification code
+      const userCredential = await authService.confirmPhoneCode(confirmation, code);
+      const user = userCredential.user;
+
+      // If coming from email verification, mark phone as verified
+      if (fromEmailVerification && isNewUser) {
+        await authService.markPhoneAsVerified(user.uid);
+      } else if (isNewUser) {
+        // Legacy flow: create basic user document if needed
+        const userProfile = await authService.getUserProfile(user.uid);
+        if (!userProfile) {
+          await authService.createUserDocument(user, {});
+        }
+      } else {
+        // For existing users: Check if user document exists, if not create it
+        const userProfile = await authService.getUserProfile(user.uid);
+        if (!userProfile) {
+          await authService.createUserDocument(user, {});
+        }
+      }
+
+      // Navigation is automatically handled by AuthContext
+      // The app will automatically navigate the user to the main screen
     } catch (error: any) {
-      Alert.alert('Invalid Code', 'The verification code is incorrect');
+      let message = 'The verification code is incorrect';
+      
+      if (error.code === 'auth/invalid-verification-code') {
+        message = 'Invalid verification code';
+      } else if (error.code === 'auth/code-expired') {
+        message = 'Verification code has expired. Please request a new one';
+      } else if (error.message) {
+        message = error.message;
+      }
+      
+      Alert.alert('Verification Failed', message);
+      setCode(''); // Reset code on error
     } finally {
       setLoading(false);
     }
   };
 
   const handleResendCode = async () => {
-    // TODO: Implement - Issue #2
-    // 1. Resend verification code
-    // 2. Reset countdown
+    const { phoneNumber, displayName, isNewUser } = route.params || {};
     
-    setCountdown(60);
-    Alert.alert('Not Implemented', 'Issue #2 - Resend code');
+    if (!phoneNumber) {
+      Alert.alert('Error', 'Phone number not found. Please go back and try again.');
+      return;
+    }
+
+    try {
+      const confirmation = await authService.sendPhoneVerification(phoneNumber);
+      
+      // Update route params with new confirmation
+      navigation.setParams({ 
+        confirmation, 
+        phoneNumber,
+        displayName,
+        isNewUser 
+      } as any);
+      
+      setCountdown(60);
+      setCode(''); // Reset code
+      Alert.alert('Success', 'A new verification code has been sent');
+    } catch (error: any) {
+      let message = 'Failed to resend verification code';
+      
+      if (error.code === 'auth/too-many-requests') {
+        message = 'Too many attempts. Please try again later';
+      } else if (error.message) {
+        message = error.message;
+      }
+      
+      Alert.alert('Error', message);
+    }
   };
 
   return (

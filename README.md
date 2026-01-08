@@ -1,85 +1,119 @@
 # CheckToDoList
 
-Eine moderne To-Do Listen Anwendung mit Material Design, die es ermöglicht, mehrere Listen zu erstellen und zu verwalten.
+A collaborative to-do list app for sharing and managing lists with friends and family.
 
-![Material Design](https://img.shields.io/badge/Material%20Design-Lite-blue)
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
+![React Native](https://img.shields.io/badge/React%20Native-0.73-blue)
+![Firebase](https://img.shields.io/badge/Firebase-Backend-orange)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)
 
-## Features
+## 📁 Project Structure
 
-✅ **Mehrere Listen** - Erstelle beliebig viele To-Do Listen mit individuellen Namen  
-✅ **Items hinzufügen** - Füge Aufgaben zu jeder Liste hinzu  
-✅ **Checkbox** - Markiere Aufgaben als erledigt  
-✅ **Bearbeiten** - Bearbeite Listen-Namen und Item-Texte jederzeit  
-✅ **Löschen** - Entferne einzelne Items oder ganze Listen  
-✅ **Persistenz** - Alle Daten werden im LocalStorage gespeichert  
-✅ **Responsive Grid** - Listen werden in einem 3-spalten Layout angezeigt  
-✅ **Scrollbar** - Listen mit vielen Items sind scrollbar  
-✅ **Material Design** - Modernes UI mit Material Design Lite
-
-## Screenshot
-
-Die App zeigt Listen in einem übersichtlichen 3-spalten Grid an. Jede Liste hat:
-- Header mit Listenname und "+" Button für neue Items
-- Scrollbarer Content-Bereich für die Aufgaben
-- Footer mit Buttons zum Bearbeiten und Löschen der Liste
-
-## Installation
-
-1. Repository klonen:
-```bash
-git clone https://github.com/FairHead/CheckToDoList.git
+```
+CheckToDoList/
+├── web/                    # Original web application
+│   ├── index.html
+│   ├── app.js
+│   └── styles.css
+│
+├── mobile/                 # React Native mobile app
+│   ├── src/
+│   │   ├── config/        # Firebase configuration
+│   │   ├── constants/     # Colors, routes
+│   │   ├── hooks/         # Custom React hooks
+│   │   ├── screens/       # Screen components
+│   │   ├── services/      # Firebase service layer
+│   │   └── types/         # TypeScript interfaces
+│   └── package.json
+│
+├── docs/
+│   └── MOBILE_APP_SPECIFICATION.md
+│
+└── .github/issues/        # Implementation issues for Copilot
 ```
 
-2. `index.html` im Browser öffnen
+## ✅ Features
 
-Das ist alles! Keine weiteren Abhängigkeiten oder Build-Schritte erforderlich.
+### Web App (Complete)
+- ✅ Create lists with custom names
+- ✅ Add/edit/delete items
+- ✅ Toggle item completion
+- ✅ 3-column responsive grid layout
+- ✅ Local storage persistence
 
-## Verwendung
+### Mobile App (In Development)
+- 📱 Phone authentication
+- 👥 Share lists with contacts
+- 🔔 Push notifications for updates
+- 🔄 Real-time synchronization
+- 📇 Phone contacts integration
 
-### Liste erstellen
-1. Klicke auf "Erstelle Liste" oder den "+" Button oben rechts
-2. Gib einen Namen für die Liste ein
-3. Klicke auf "Erstellen"
+## 🛠️ Tech Stack
 
-### Item hinzufügen
-1. Klicke auf den "+" Button im Header einer Liste
-2. Gib den Text für das Item ein
-3. Klicke auf "Hinzufügen"
+### Web
+- HTML5, CSS3, JavaScript
+- Material Design Lite
 
-### Item als erledigt markieren
-- Klicke auf die Checkbox neben dem Item
+### Mobile
+- React Native 0.73+
+- TypeScript
+- Firebase (Auth, Realtime Database, Cloud Messaging, Cloud Functions)
+- React Navigation 6.x
 
-### Item bearbeiten
-- Klicke auf das Stift-Icon neben dem Item
+## 🚀 Development
 
-### Item löschen
-- Klicke auf das Mülleimer-Icon neben dem Item
+### Implementation Order (for GitHub Copilot)
 
-### Liste umbenennen
-- Klicke auf das Stift-Icon im Footer der Liste
+1. **Issue #1**: Project Setup & Firebase Configuration
+2. **Issue #2**: Phone Authentication  
+3. **Issue #8**: Navigation & Tab Structure
+4. **Issue #3**: List Management (CRUD)
+5. **Issue #4**: Item Management
+6. **Issue #5**: Invitation System
+7. **Issue #6**: Contacts Integration
+8. **Issue #7**: Push Notifications
 
-### Liste löschen
-- Klicke auf das Mülleimer-Icon im Footer der Liste
+Each issue in `.github/issues/` contains:
+- Detailed description & acceptance criteria
+- Implementation steps with code examples
+- Files to modify & testing requirements
+- References to existing code
 
-## Tastenkürzel
+### Getting Started
 
-| Taste | Aktion |
-|-------|--------|
-| `Enter` | Dialog bestätigen |
-| `Escape` | Dialog schließen |
+#### Web App
+```bash
+# Clone and open in browser
+git clone https://github.com/FairHead/CheckToDoList.git
+open web/index.html
+```
 
-## Technologien
+#### Mobile App
+```bash
+# Follow Issue #1 for complete setup
+cd mobile
+npm install
+npx react-native run-ios  # or run-android
+```
 
-- **HTML5** - Struktur
-- **CSS3** - Styling mit Grid Layout
-- **JavaScript (Vanilla)** - Logik und DOM-Manipulation
-- **Material Design Lite** - UI-Komponenten und Icons
-- **LocalStorage** - Datenpersistenz
+## 🎨 Design
 
-## Projektstruktur
+### Colors
+| Name | Hex | Usage |
+|------|-----|-------|
+| Primary | `#0288D1` | Headers, buttons |
+| Background | `#29B6F6` | Main background |
+| Content | `#81D4FA` | Cards, inputs |
+| Text | `#333333` | Primary text |
+
+## 📚 Documentation
+
+- [Mobile App Specification](docs/MOBILE_APP_SPECIFICATION.md) - Complete mobile app specification
+- [Issue #1](/.github/issues/ISSUE_001_project_setup.md) - Project setup guide
+- [Issue #2](/.github/issues/ISSUE_002_phone_authentication.md) - Authentication implementation
+
+## License
+
+MIT## Projektstruktur
 
 ```
 CheckToDoList/

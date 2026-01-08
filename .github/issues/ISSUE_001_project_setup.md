@@ -5,9 +5,11 @@
 ## Priority: 🔴 Critical (Must be done first)
 
 ## Description
+
 Initialize the React Native project with all required dependencies and configure Firebase services.
 
 ## Acceptance Criteria
+
 - [x] React Native project initialized with TypeScript
 - [x] All dependencies from package.json installed
 - [x] Firebase project created in Firebase Console
@@ -22,6 +24,7 @@ Initialize the React Native project with all required dependencies and configure
 - [x] App builds and runs on Android (iOS pending CocoaPods install)
 
 ## Completion Notes
+
 - Firebase Project ID: `checktodolist-dbfed`
 - Package/Bundle ID: `com.checktodolist`
 - React Native Version: 0.73.0
@@ -31,11 +34,13 @@ Initialize the React Native project with all required dependencies and configure
 ## Implementation Steps
 
 ### 1. Create React Native Project
+
 ```bash
 npx react-native@latest init CheckToDoList --template react-native-template-typescript
 ```
 
 ### 2. Install Dependencies
+
 ```bash
 cd mobile
 npm install
@@ -44,6 +49,7 @@ cd ios && pod install && cd ..
 ```
 
 ### 3. Firebase Console Setup
+
 1. Go to https://console.firebase.google.com
 2. Create new project "CheckToDoList"
 3. Enable Authentication > Phone provider
@@ -51,9 +57,11 @@ cd ios && pod install && cd ..
 5. Download configuration files
 
 ### 4. Update Firebase Config
+
 Update `mobile/src/config/firebase.ts` with your actual Firebase config values.
 
 ### 5. Database Security Rules
+
 ```json
 {
   "rules": {
@@ -80,16 +88,19 @@ Update `mobile/src/config/firebase.ts` with your actual Firebase config values.
 ```
 
 ## Files to Modify
+
 - `mobile/src/config/firebase.ts` - Add actual Firebase config
 - `mobile/android/app/google-services.json` - Add Android config
 - `mobile/ios/GoogleService-Info.plist` - Add iOS config
 
 ## Testing
+
 - [ ] App compiles without errors
 - [ ] Firebase initialization successful (no console errors)
 - [ ] Can see Firebase project in Firebase Console
 
 ## References
+
 - [React Native Firebase Setup](https://rnfirebase.io/)
 - [Firebase Console](https://console.firebase.google.com)
 - [Realtime Database Security Rules](https://firebase.google.com/docs/database/security)

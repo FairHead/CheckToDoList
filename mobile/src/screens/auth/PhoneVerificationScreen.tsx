@@ -22,15 +22,18 @@ import { COLORS } from '../../constants/colors';
 import { authService } from '../../services';
 import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
+// Navigation Params Type
+type PhoneVerificationParams = {
+  confirmation: FirebaseAuthTypes.ConfirmationResult;
+  phoneNumber: string;
+  displayName?: string;
+  isNewUser: boolean;
+};
+
 type Props = {
   navigation: NativeStackNavigationProp<any>;
   route: RouteProp<{
-    params: {
-      confirmation: FirebaseAuthTypes.ConfirmationResult;
-      phoneNumber: string;
-      displayName?: string;
-      isNewUser: boolean;
-    };
+    params: PhoneVerificationParams;
   }>;
 };
 
@@ -40,9 +43,10 @@ const PhoneVerificationScreen: React.FC<Props> = ({ navigation, route }) => {
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [countdown, setCountdown] = useState(60);
+  const [confirmation, setConfirmation] = useState(route.params.confirmation);
   const inputRef = useRef<TextInput>(null);
 
-  const { confirmation, phoneNumber, displayName, isNewUser } = route.params;
+  const { phoneNumber, displayName, isNewUser } = route.params;
 
   // Countdown timer for resend
   useEffect(() => {
@@ -94,8 +98,8 @@ const PhoneVerificationScreen: React.FC<Props> = ({ navigation, route }) => {
     try {
       const newConfirmation = await authService.sendPhoneVerification(phoneNumber);
       
-      // Update route params mit neuem confirmation
-      navigation.setParams({ confirmation: newConfirmation } as any);
+      // Update confirmation state
+      setConfirmation(newConfirmation);
       
       setCountdown(60);
       Alert.alert('Erfolg', 'Ein neuer Verifizierungscode wurde gesendet');

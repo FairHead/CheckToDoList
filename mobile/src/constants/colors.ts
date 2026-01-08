@@ -34,7 +34,8 @@ export const colors = {
   overlay: 'rgba(0, 0, 0, 0.5)',
 };
 
-// Export as COLORS for compatibility with screens
+// Export als COLORS für Kompatibilität mit bestehenden Screens
+// Hinweis: Verwenden Sie vorzugsweise `colors` (lowercase) in neuen Dateien
 export const COLORS = colors;
 
 export default colors;

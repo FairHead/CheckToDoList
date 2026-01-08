@@ -217,7 +217,8 @@ export const getCurrentUser = (): FirebaseAuthTypes.User | null => {
  * Convert Firebase error codes to German error messages
  */
 const getFirebaseErrorMessage = (error: Error): string => {
-  const errorCode = (error as any).code;
+  // Type guard für Firebase-Fehler mit Code
+  const errorCode = (error as { code?: string }).code;
   
   switch (errorCode) {
     case 'auth/invalid-phone-number':

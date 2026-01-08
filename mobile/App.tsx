@@ -3,17 +3,11 @@
  * Collaborative ToDo-Listen App mit Firebase Backend
  */
 
-import React from 'react';
-import {
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import React from "react";
+import { SafeAreaView, StatusBar, StyleSheet, Text, View } from "react-native";
 
 // Firebase initialisieren
-import '@react-native-firebase/app';
+import "@react-native-firebase/app";
 
 function App(): React.JSX.Element {
   return (
@@ -38,34 +32,34 @@ function App(): React.JSX.Element {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#29B6F6',
+    backgroundColor: "#29B6F6",
   },
   header: {
-    backgroundColor: '#0288D1',
+    backgroundColor: "#0288D1",
     padding: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   headerText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   content: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
   },
   welcomeText: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
+    fontWeight: "bold",
+    color: "#FFFFFF",
     marginBottom: 20,
   },
   subText: {
     fontSize: 16,
-    color: '#FFFFFF',
-    textAlign: 'center',
+    color: "#FFFFFF",
+    textAlign: "center",
     marginBottom: 8,
   },
 });

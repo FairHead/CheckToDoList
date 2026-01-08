@@ -32,14 +32,14 @@ const WelcomeScreen: React.FC<Props> = ({ navigation }) => {
       <View style={styles.buttonContainer}>
         <TouchableOpacity 
           style={styles.primaryButton}
-          onPress={() => navigation.navigate(ROUTES.AUTH.LOGIN)}
+          onPress={() => navigation.navigate(ROUTES.LOGIN)}
         >
           <Text style={styles.primaryButtonText}>Sign In</Text>
         </TouchableOpacity>
         
         <TouchableOpacity 
           style={styles.secondaryButton}
-          onPress={() => navigation.navigate(ROUTES.AUTH.REGISTER)}
+          onPress={() => navigation.navigate(ROUTES.REGISTER)}
         >
           <Text style={styles.secondaryButtonText}>Create Account</Text>
         </TouchableOpacity>

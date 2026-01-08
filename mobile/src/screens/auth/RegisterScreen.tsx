@@ -22,6 +22,7 @@ import {
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { COLORS } from '../../constants/colors';
 import { ROUTES } from '../../constants/routes';
+import * as authService from '../../services/authService';
 
 type Props = {
   navigation: NativeStackNavigationProp<any>;
@@ -33,36 +34,49 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
-    // TODO: Implement - Issue #2
-    // 1. Validate display name (required, min 2 chars)
-    // 2. Validate phone number format
-    // 3. Check if phone number already registered
-    // 4. Send verification code
-    // 5. Navigate to PhoneVerificationScreen
-    
+    // Validierung
     if (!displayName.trim()) {
       Alert.alert('Error', 'Please enter your name');
       return;
     }
     
-    if (!phoneNumber) {
+    if (displayName.trim().length < 2) {
+      Alert.alert('Error', 'Name must be at least 2 characters long');
+      return;
+    }
+    
+    if (!phoneNumber.trim()) {
       Alert.alert('Error', 'Please enter your phone number');
+      return;
+    }
+
+    // Validiere E.164 Format
+    if (!phoneNumber.startsWith('+')) {
+      Alert.alert('Error', 'Phone number must start with + and country code (e.g., +49)');
       return;
     }
 
     setLoading(true);
     try {
-      // Store displayName for after verification
-      // const confirmation = await authService.signInWithPhone(phoneNumber);
-      // navigation.navigate(ROUTES.AUTH.PHONE_VERIFICATION, { 
-      //   confirmation, 
-      //   phoneNumber,
-      //   displayName,
-      //   isNewUser: true
-      // });
-      Alert.alert('Not Implemented', 'Issue #2 - Phone authentication');
+      const confirmation = await authService.sendPhoneVerification(phoneNumber);
+      navigation.navigate(ROUTES.PHONE_VERIFICATION, { 
+        confirmation, 
+        phoneNumber,
+        displayName: displayName.trim(),
+        isNewUser: true
+      });
     } catch (error: any) {
-      Alert.alert('Error', error.message);
+      let message = 'Failed to send verification code';
+      
+      if (error.code === 'auth/invalid-phone-number') {
+        message = 'Invalid phone number format';
+      } else if (error.code === 'auth/too-many-requests') {
+        message = 'Too many attempts. Please try again later';
+      } else if (error.message) {
+        message = error.message;
+      }
+      
+      Alert.alert('Error', message);
     } finally {
       setLoading(false);
     }
@@ -116,7 +130,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
 
       <TouchableOpacity 
         style={styles.linkButton}
-        onPress={() => navigation.navigate(ROUTES.AUTH.LOGIN)}
+        onPress={() => navigation.navigate(ROUTES.LOGIN)}
       >
         <Text style={styles.linkText}>
           Already have an account? <Text style={styles.linkTextBold}>Sign In</Text>

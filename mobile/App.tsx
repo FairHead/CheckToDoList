@@ -10,43 +10,124 @@ import {
   StyleSheet,
   Text,
   View,
+  ActivityIndicator,
 } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 // Firebase initialisieren
 import '@react-native-firebase/app';
 
-function App(): React.JSX.Element {
+// Context
+import { AuthProvider, useAuth } from './src/contexts/AuthContext';
+
+// Screens
+import WelcomeScreen from './src/screens/auth/WelcomeScreen';
+import LoginScreen from './src/screens/auth/LoginScreen';
+import RegisterScreen from './src/screens/auth/RegisterScreen';
+import PhoneVerificationScreen from './src/screens/auth/PhoneVerificationScreen';
+
+// Constants
+import { ROUTES } from './src/constants/routes';
+import { COLORS } from './src/constants/colors';
+
+const Stack = createNativeStackNavigator();
+
+/**
+ * Auth Navigator - Screens für nicht-authentifizierte User
+ */
+const AuthNavigator = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        contentStyle: { backgroundColor: COLORS.background },
+      }}
+    >
+      <Stack.Screen name={ROUTES.WELCOME} component={WelcomeScreen} />
+      <Stack.Screen name={ROUTES.LOGIN} component={LoginScreen} />
+      <Stack.Screen name={ROUTES.REGISTER} component={RegisterScreen} />
+      <Stack.Screen name={ROUTES.PHONE_VERIFICATION} component={PhoneVerificationScreen} />
+    </Stack.Navigator>
+  );
+};
+
+/**
+ * Main Navigator - Placeholder für authentifizierte User
+ * TODO: Issue #8 - Full navigation implementation
+ */
+const MainNavigator = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#0288D1" />
+      <StatusBar barStyle="light-content" backgroundColor={COLORS.primary} />
       <View style={styles.header}>
         <Text style={styles.headerText}>CheckToDoList</Text>
       </View>
       <View style={styles.content}>
-        <Text style={styles.welcomeText}>🎉 Firebase Connected!</Text>
+        <Text style={styles.welcomeText}>🎉 Authentication Successful!</Text>
         <Text style={styles.subText}>
-          Die App ist erfolgreich eingerichtet.
+          You are now logged in.
         </Text>
         <Text style={styles.subText}>
-          Nächster Schritt: Authentication implementieren
+          Next: Implement list management (Issue #3)
         </Text>
       </View>
     </SafeAreaView>
+  );
+};
+
+/**
+ * Loading Screen während Auth-Status-Check
+ */
+const LoadingScreen = () => {
+  return (
+    <View style={styles.loadingContainer}>
+      <ActivityIndicator size="large" color={COLORS.primary} />
+      <Text style={styles.loadingText}>Loading...</Text>
+    </View>
+  );
+};
+
+/**
+ * App Root mit Navigation
+ */
+const AppRoot = () => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <LoadingScreen />;
+  }
+
+  return (
+    <NavigationContainer>
+      {user ? <MainNavigator /> : <AuthNavigator />}
+    </NavigationContainer>
+  );
+};
+
+/**
+ * App Component mit AuthProvider
+ */
+function App(): React.JSX.Element {
+  return (
+    <AuthProvider>
+      <AppRoot />
+    </AuthProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#29B6F6',
+    backgroundColor: COLORS.background,
   },
   header: {
-    backgroundColor: '#0288D1',
+    backgroundColor: COLORS.primary,
     padding: 20,
     alignItems: 'center',
   },
   headerText: {
-    color: '#FFFFFF',
+    color: COLORS.white,
     fontSize: 24,
     fontWeight: 'bold',
   },
@@ -59,14 +140,25 @@ const styles = StyleSheet.create({
   welcomeText: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: COLORS.white,
     marginBottom: 20,
   },
   subText: {
     fontSize: 16,
-    color: '#FFFFFF',
+    color: COLORS.white,
     textAlign: 'center',
     marginBottom: 8,
+  },
+  loadingContainer: {
+    flex: 1,
+    backgroundColor: COLORS.background,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 16,
+    fontSize: 16,
+    color: COLORS.white,
   },
 });
 

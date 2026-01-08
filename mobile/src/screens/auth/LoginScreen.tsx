@@ -20,7 +20,7 @@ import {
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { COLORS } from '../../constants/colors';
 import { ROUTES } from '../../constants/routes';
-import { authService } from '../../services';
+import * as authService from '../../services/authService';
 
 type Props = {
   navigation: NativeStackNavigationProp<any>;
@@ -31,24 +31,37 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
 
   const handleSendCode = async () => {
-    // TODO: Implement - Issue #2
-    // 1. Validate phone number format
-    // 2. Call authService.signInWithPhone(phoneNumber)
-    // 3. Navigate to PhoneVerificationScreen with confirmation result
-    // 4. Handle errors (invalid number, rate limit, etc.)
-    
-    if (!phoneNumber) {
+    if (!phoneNumber.trim()) {
       Alert.alert('Error', 'Please enter your phone number');
+      return;
+    }
+
+    // Validiere E.164 Format
+    if (!phoneNumber.startsWith('+')) {
+      Alert.alert('Error', 'Phone number must start with + and country code (e.g., +49)');
       return;
     }
 
     setLoading(true);
     try {
-      // const confirmation = await authService.signInWithPhone(phoneNumber);
-      // navigation.navigate(ROUTES.AUTH.PHONE_VERIFICATION, { confirmation, phoneNumber });
-      Alert.alert('Not Implemented', 'Issue #2 - Phone authentication');
+      const confirmation = await authService.sendPhoneVerification(phoneNumber);
+      navigation.navigate(ROUTES.PHONE_VERIFICATION, { 
+        confirmation, 
+        phoneNumber,
+        isNewUser: false 
+      });
     } catch (error: any) {
-      Alert.alert('Error', error.message);
+      let message = 'Failed to send verification code';
+      
+      if (error.code === 'auth/invalid-phone-number') {
+        message = 'Invalid phone number format';
+      } else if (error.code === 'auth/too-many-requests') {
+        message = 'Too many attempts. Please try again later';
+      } else if (error.message) {
+        message = error.message;
+      }
+      
+      Alert.alert('Error', message);
     } finally {
       setLoading(false);
     }
@@ -87,7 +100,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
       <TouchableOpacity 
         style={styles.linkButton}
-        onPress={() => navigation.navigate(ROUTES.AUTH.REGISTER)}
+        onPress={() => navigation.navigate(ROUTES.REGISTER)}
       >
         <Text style={styles.linkText}>
           Don't have an account? <Text style={styles.linkTextBold}>Sign Up</Text>

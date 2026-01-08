@@ -21,6 +21,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { COLORS } from '../../constants/colors';
 import { ROUTES } from '../../constants/routes';
 import { authService } from '../../services';
+import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
 type Props = {
   navigation: NativeStackNavigationProp<any>;
@@ -30,25 +31,32 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const validatePhoneNumber = (phone: string): boolean => {
+    // Einfache Validierung: muss mit + beginnen und mindestens 10 Zeichen haben
+    return phone.startsWith('+') && phone.length >= 10;
+  };
+
   const handleSendCode = async () => {
-    // TODO: Implement - Issue #2
-    // 1. Validate phone number format
-    // 2. Call authService.signInWithPhone(phoneNumber)
-    // 3. Navigate to PhoneVerificationScreen with confirmation result
-    // 4. Handle errors (invalid number, rate limit, etc.)
-    
-    if (!phoneNumber) {
-      Alert.alert('Error', 'Please enter your phone number');
+    if (!phoneNumber.trim()) {
+      Alert.alert('Fehler', 'Bitte geben Sie Ihre Telefonnummer ein');
+      return;
+    }
+
+    if (!validatePhoneNumber(phoneNumber)) {
+      Alert.alert('Fehler', 'Bitte geben Sie eine gültige Telefonnummer im Format +49... ein');
       return;
     }
 
     setLoading(true);
     try {
-      // const confirmation = await authService.signInWithPhone(phoneNumber);
-      // navigation.navigate(ROUTES.AUTH.PHONE_VERIFICATION, { confirmation, phoneNumber });
-      Alert.alert('Not Implemented', 'Issue #2 - Phone authentication');
+      const confirmation = await authService.sendPhoneVerification(phoneNumber);
+      navigation.navigate(ROUTES.AUTH.PHONE_VERIFICATION, { 
+        confirmation, 
+        phoneNumber,
+        isNewUser: false 
+      });
     } catch (error: any) {
-      Alert.alert('Error', error.message);
+      Alert.alert('Fehler', error.message || 'SMS konnte nicht gesendet werden');
     } finally {
       setLoading(false);
     }
@@ -56,20 +64,21 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sign In</Text>
+      <Text style={styles.title}>Anmelden</Text>
       <Text style={styles.subtitle}>
-        Enter your phone number to receive a verification code
+        Geben Sie Ihre Telefonnummer ein, um einen Verifizierungscode zu erhalten
       </Text>
 
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
           placeholder="+49 123 456789"
-          placeholderTextColor={COLORS.textSecondary}
+          placeholderTextColor={COLORS.placeholder}
           value={phoneNumber}
           onChangeText={setPhoneNumber}
           keyboardType="phone-pad"
           autoFocus
+          editable={!loading}
         />
       </View>
 
@@ -81,16 +90,17 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
         {loading ? (
           <ActivityIndicator color={COLORS.primary} />
         ) : (
-          <Text style={styles.buttonText}>Send Verification Code</Text>
+          <Text style={styles.buttonText}>Verifizierungscode senden</Text>
         )}
       </TouchableOpacity>
 
       <TouchableOpacity 
         style={styles.linkButton}
         onPress={() => navigation.navigate(ROUTES.AUTH.REGISTER)}
+        disabled={loading}
       >
         <Text style={styles.linkText}>
-          Don't have an account? <Text style={styles.linkTextBold}>Sign Up</Text>
+          Noch kein Konto? <Text style={styles.linkTextBold}>Registrieren</Text>
         </Text>
       </TouchableOpacity>
     </View>

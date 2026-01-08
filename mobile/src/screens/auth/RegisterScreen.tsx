@@ -22,6 +22,7 @@ import {
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { COLORS } from '../../constants/colors';
 import { ROUTES } from '../../constants/routes';
+import { authService } from '../../services';
 
 type Props = {
   navigation: NativeStackNavigationProp<any>;
@@ -32,37 +33,43 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const validatePhoneNumber = (phone: string): boolean => {
+    // Einfache Validierung: muss mit + beginnen und mindestens 10 Zeichen haben
+    return phone.startsWith('+') && phone.length >= 10;
+  };
+
   const handleRegister = async () => {
-    // TODO: Implement - Issue #2
-    // 1. Validate display name (required, min 2 chars)
-    // 2. Validate phone number format
-    // 3. Check if phone number already registered
-    // 4. Send verification code
-    // 5. Navigate to PhoneVerificationScreen
-    
-    if (!displayName.trim()) {
-      Alert.alert('Error', 'Please enter your name');
+    // Validiere Display Name
+    if (!displayName.trim() || displayName.trim().length < 2) {
+      Alert.alert('Fehler', 'Bitte geben Sie einen Namen ein (mindestens 2 Zeichen)');
       return;
     }
     
-    if (!phoneNumber) {
-      Alert.alert('Error', 'Please enter your phone number');
+    // Validiere Telefonnummer
+    if (!phoneNumber.trim()) {
+      Alert.alert('Fehler', 'Bitte geben Sie Ihre Telefonnummer ein');
+      return;
+    }
+
+    if (!validatePhoneNumber(phoneNumber)) {
+      Alert.alert('Fehler', 'Bitte geben Sie eine gültige Telefonnummer im Format +49... ein');
       return;
     }
 
     setLoading(true);
     try {
-      // Store displayName for after verification
-      // const confirmation = await authService.signInWithPhone(phoneNumber);
-      // navigation.navigate(ROUTES.AUTH.PHONE_VERIFICATION, { 
-      //   confirmation, 
-      //   phoneNumber,
-      //   displayName,
-      //   isNewUser: true
-      // });
-      Alert.alert('Not Implemented', 'Issue #2 - Phone authentication');
+      // Sende Verifizierungscode
+      const confirmation = await authService.sendPhoneVerification(phoneNumber);
+      
+      // Navigiere zu PhoneVerificationScreen mit displayName für neuen User
+      navigation.navigate(ROUTES.AUTH.PHONE_VERIFICATION, { 
+        confirmation, 
+        phoneNumber,
+        displayName: displayName.trim(),
+        isNewUser: true
+      });
     } catch (error: any) {
-      Alert.alert('Error', error.message);
+      Alert.alert('Fehler', error.message || 'SMS konnte nicht gesendet werden');
     } finally {
       setLoading(false);
     }
@@ -73,32 +80,34 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <Text style={styles.title}>Create Account</Text>
+      <Text style={styles.title}>Konto erstellen</Text>
       <Text style={styles.subtitle}>
-        Sign up to start sharing lists with friends
+        Registrieren Sie sich, um Listen mit Freunden zu teilen
       </Text>
 
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Your Name</Text>
+        <Text style={styles.label}>Ihr Name</Text>
         <TextInput
           style={styles.input}
-          placeholder="Enter your name"
-          placeholderTextColor={COLORS.textSecondary}
+          placeholder="Geben Sie Ihren Namen ein"
+          placeholderTextColor={COLORS.placeholder}
           value={displayName}
           onChangeText={setDisplayName}
           autoFocus
+          editable={!loading}
         />
       </View>
 
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Phone Number</Text>
+        <Text style={styles.label}>Telefonnummer</Text>
         <TextInput
           style={styles.input}
           placeholder="+49 123 456789"
-          placeholderTextColor={COLORS.textSecondary}
+          placeholderTextColor={COLORS.placeholder}
           value={phoneNumber}
           onChangeText={setPhoneNumber}
           keyboardType="phone-pad"
+          editable={!loading}
         />
       </View>
 
@@ -110,16 +119,17 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
         {loading ? (
           <ActivityIndicator color={COLORS.primary} />
         ) : (
-          <Text style={styles.buttonText}>Continue</Text>
+          <Text style={styles.buttonText}>Weiter</Text>
         )}
       </TouchableOpacity>
 
       <TouchableOpacity 
         style={styles.linkButton}
         onPress={() => navigation.navigate(ROUTES.AUTH.LOGIN)}
+        disabled={loading}
       >
         <Text style={styles.linkText}>
-          Already have an account? <Text style={styles.linkTextBold}>Sign In</Text>
+          Bereits ein Konto? <Text style={styles.linkTextBold}>Anmelden</Text>
         </Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>

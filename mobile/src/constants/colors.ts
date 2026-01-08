@@ -8,16 +8,20 @@ export const colors = {
   background: '#29B6F6',
   surface: '#FFFFFF',
   card: '#F5F5F5',
+  contentBackground: '#81D4FA',
 
   // Text
+  text: '#333333',
   textPrimary: '#333333',
   textSecondary: '#666666',
   textLight: '#999999',
   textOnPrimary: '#FFFFFF',
+  white: '#FFFFFF',
 
   // Status
   success: '#4CAF50',
   error: '#D32F2F',
+  danger: '#F44336',
   warning: '#FF9800',
 
   // Border
@@ -29,5 +33,9 @@ export const colors = {
   disabled: '#BDBDBD',
   overlay: 'rgba(0, 0, 0, 0.5)',
 };
+
+// Export als COLORS für Kompatibilität mit bestehenden Screens
+// Hinweis: Verwenden Sie vorzugsweise `colors` (lowercase) in neuen Dateien
+export const COLORS = colors;
 
 export default colors;

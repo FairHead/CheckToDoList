@@ -10,63 +10,77 @@ import {
   StyleSheet,
   Text,
   View,
+  ActivityIndicator,
 } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
 
 // Firebase initialisieren
 import '@react-native-firebase/app';
 
+// Auth Context
+import { AuthProvider, useAuth } from './src/contexts/AuthContext';
+
+// Navigators
+import { AuthNavigator, MainNavigator } from './src/navigation';
+
+// Colors
+import { COLORS } from './src/constants/colors';
+
+/**
+ * App Root Navigator
+ * Zeigt AuthNavigator oder MainNavigator basierend auf Auth-Status
+ */
+const AppNavigator: React.FC = () => {
+  const { user, loading } = useAuth();
+
+  // Zeige Loading Screen während Auth-Check
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={COLORS.primary} />
+        <Text style={styles.loadingText}>Lade...</Text>
+      </View>
+    );
+  }
+
+  // Zeige Auth oder Main Navigator basierend auf User-Status
+  return (
+    <NavigationContainer>
+      {user ? <MainNavigator /> : <AuthNavigator />}
+    </NavigationContainer>
+  );
+};
+
+/**
+ * App Root Component
+ * Wrapped mit AuthProvider für globalen Auth-State
+ */
 function App(): React.JSX.Element {
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#0288D1" />
-      <View style={styles.header}>
-        <Text style={styles.headerText}>CheckToDoList</Text>
-      </View>
-      <View style={styles.content}>
-        <Text style={styles.welcomeText}>🎉 Firebase Connected!</Text>
-        <Text style={styles.subText}>
-          Die App ist erfolgreich eingerichtet.
-        </Text>
-        <Text style={styles.subText}>
-          Nächster Schritt: Authentication implementieren
-        </Text>
-      </View>
-    </SafeAreaView>
+    <AuthProvider>
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="light-content" backgroundColor={COLORS.primary} />
+        <AppNavigator />
+      </SafeAreaView>
+    </AuthProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#29B6F6',
+    backgroundColor: COLORS.background,
   },
-  header: {
-    backgroundColor: '#0288D1',
-    padding: 20,
-    alignItems: 'center',
-  },
-  headerText: {
-    color: '#FFFFFF',
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  content: {
+  loadingContainer: {
     flex: 1,
+    backgroundColor: COLORS.background,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
   },
-  welcomeText: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    marginBottom: 20,
-  },
-  subText: {
+  loadingText: {
+    marginTop: 16,
     fontSize: 16,
-    color: '#FFFFFF',
-    textAlign: 'center',
-    marginBottom: 8,
+    color: COLORS.white,
   },
 });
 

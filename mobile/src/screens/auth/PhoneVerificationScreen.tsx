@@ -20,10 +20,21 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
 import { COLORS } from '../../constants/colors';
 import { authService } from '../../services';
+import { FirebaseAuthTypes } from '@react-native-firebase/auth';
+
+// Navigation Params Type
+type PhoneVerificationParams = {
+  confirmation: FirebaseAuthTypes.ConfirmationResult;
+  phoneNumber: string;
+  displayName?: string;
+  isNewUser: boolean;
+};
 
 type Props = {
   navigation: NativeStackNavigationProp<any>;
-  route: RouteProp<any>;
+  route: RouteProp<{
+    params: PhoneVerificationParams;
+  }>;
 };
 
 const CODE_LENGTH = 6;
@@ -32,7 +43,10 @@ const PhoneVerificationScreen: React.FC<Props> = ({ navigation, route }) => {
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [countdown, setCountdown] = useState(60);
+  const [confirmation, setConfirmation] = useState(route.params.confirmation);
   const inputRef = useRef<TextInput>(null);
+
+  const { phoneNumber, displayName, isNewUser } = route.params;
 
   // Countdown timer for resend
   useEffect(() => {
@@ -43,49 +57,65 @@ const PhoneVerificationScreen: React.FC<Props> = ({ navigation, route }) => {
   }, [countdown]);
 
   const handleVerifyCode = async () => {
-    // TODO: Implement - Issue #2
-    // 1. Validate code length
-    // 2. Confirm code with Firebase: confirmation.confirm(code)
-    // 3. If new user, update profile with displayName
-    // 4. Create user document in database
-    // 5. Navigate to main app
-    
     if (code.length !== CODE_LENGTH) {
-      Alert.alert('Error', 'Please enter the 6-digit code');
+      Alert.alert('Fehler', 'Bitte geben Sie den 6-stelligen Code ein');
       return;
     }
 
     setLoading(true);
     try {
-      // const { confirmation, displayName, isNewUser } = route.params;
-      // await confirmation.confirm(code);
-      // 
-      // if (isNewUser && displayName) {
-      //   await authService.updateProfile({ displayName });
-      // }
-      Alert.alert('Not Implemented', 'Issue #2 - Code verification');
+      // Bestätige den Verifizierungscode
+      const userCredential = await authService.confirmPhoneCode(confirmation, code);
+      const user = userCredential.user;
+
+      // Wenn neuer User, erstelle Profil in Database
+      if (isNewUser && displayName) {
+        await authService.createUserProfile(user, displayName);
+      } else if (!isNewUser) {
+        // Bei bestehendem User, prüfe ob Profil existiert
+        await authService.createUserProfile(user);
+      }
+
+      // Navigation erfolgt automatisch durch AuthContext
+      // wenn user state sich ändert
     } catch (error: any) {
-      Alert.alert('Invalid Code', 'The verification code is incorrect');
+      setLoading(false);
+      if (error.message.includes('Verifizierungscode')) {
+        Alert.alert('Ungültiger Code', error.message);
+      } else {
+        Alert.alert('Fehler', error.message || 'Verifizierung fehlgeschlagen');
+      }
+      setCode('');
+    }
+  };
+
+  const handleResendCode = async () => {
+    if (countdown > 0) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const newConfirmation = await authService.sendPhoneVerification(phoneNumber);
+      
+      // Update confirmation state
+      setConfirmation(newConfirmation);
+      
+      setCountdown(60);
+      Alert.alert('Erfolg', 'Ein neuer Verifizierungscode wurde gesendet');
+    } catch (error: any) {
+      Alert.alert('Fehler', error.message || 'Code konnte nicht erneut gesendet werden');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleResendCode = async () => {
-    // TODO: Implement - Issue #2
-    // 1. Resend verification code
-    // 2. Reset countdown
-    
-    setCountdown(60);
-    Alert.alert('Not Implemented', 'Issue #2 - Resend code');
-  };
-
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Verification Code</Text>
+      <Text style={styles.title}>Verifizierungscode</Text>
       <Text style={styles.subtitle}>
-        Enter the 6-digit code sent to{'\n'}
-        <Text style={styles.phone}>{route.params?.phoneNumber || '+49 XXX XXX'}</Text>
+        Geben Sie den 6-stelligen Code ein, der an{'\n'}
+        <Text style={styles.phone}>{phoneNumber}</Text> gesendet wurde
       </Text>
 
       <TextInput
@@ -97,6 +127,7 @@ const PhoneVerificationScreen: React.FC<Props> = ({ navigation, route }) => {
         maxLength={CODE_LENGTH}
         autoFocus
         textContentType="oneTimeCode" // iOS autofill
+        editable={!loading}
       />
 
       <View style={styles.dotsContainer}>
@@ -121,19 +152,19 @@ const PhoneVerificationScreen: React.FC<Props> = ({ navigation, route }) => {
         {loading ? (
           <ActivityIndicator color={COLORS.primary} />
         ) : (
-          <Text style={styles.buttonText}>Verify</Text>
+          <Text style={styles.buttonText}>Verifizieren</Text>
         )}
       </TouchableOpacity>
 
       <TouchableOpacity 
         style={styles.resendButton}
         onPress={handleResendCode}
-        disabled={countdown > 0}
+        disabled={countdown > 0 || loading}
       >
-        <Text style={[styles.resendText, countdown > 0 && styles.resendTextDisabled]}>
+        <Text style={[styles.resendText, (countdown > 0 || loading) && styles.resendTextDisabled]}>
           {countdown > 0 
-            ? `Resend code in ${countdown}s` 
-            : 'Resend verification code'}
+            ? `Code erneut senden in ${countdown}s` 
+            : 'Verifizierungscode erneut senden'}
         </Text>
       </TouchableOpacity>
     </View>

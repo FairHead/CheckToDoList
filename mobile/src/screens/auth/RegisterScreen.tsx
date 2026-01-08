@@ -23,6 +23,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { COLORS } from '../../constants/colors';
 import { ROUTES } from '../../constants/routes';
 import * as authService from '../../services/authService';
+import { validateDisplayName, validatePhoneNumber } from '../../utils/validation';
 
 type Props = {
   navigation: NativeStackNavigationProp<any>;
@@ -34,25 +35,17 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
-    // Validation
-    if (!displayName.trim()) {
-      Alert.alert('Error', 'Please enter your name');
+    // Validate display name
+    const nameValidation = validateDisplayName(displayName);
+    if (!nameValidation.isValid) {
+      Alert.alert('Error', nameValidation.error);
       return;
     }
     
-    if (displayName.trim().length < 2) {
-      Alert.alert('Error', 'Name must be at least 2 characters long');
-      return;
-    }
-    
-    if (!phoneNumber.trim()) {
-      Alert.alert('Error', 'Please enter your phone number');
-      return;
-    }
-
-    // Validate E.164 Format
-    if (!phoneNumber.startsWith('+')) {
-      Alert.alert('Error', 'Phone number must start with + and country code (e.g., +49)');
+    // Validate phone number
+    const phoneValidation = validatePhoneNumber(phoneNumber);
+    if (!phoneValidation.isValid) {
+      Alert.alert('Error', phoneValidation.error);
       return;
     }
 

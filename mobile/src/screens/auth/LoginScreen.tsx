@@ -21,6 +21,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { COLORS } from '../../constants/colors';
 import { ROUTES } from '../../constants/routes';
 import * as authService from '../../services/authService';
+import { validatePhoneNumber } from '../../utils/validation';
 
 type Props = {
   navigation: NativeStackNavigationProp<any>;
@@ -31,14 +32,10 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
 
   const handleSendCode = async () => {
-    if (!phoneNumber.trim()) {
-      Alert.alert('Error', 'Please enter your phone number');
-      return;
-    }
-
-    // Validate E.164 Format
-    if (!phoneNumber.startsWith('+')) {
-      Alert.alert('Error', 'Phone number must start with + and country code (e.g., +49)');
+    // Validate phone number
+    const validation = validatePhoneNumber(phoneNumber);
+    if (!validation.isValid) {
+      Alert.alert('Error', validation.error);
       return;
     }
 

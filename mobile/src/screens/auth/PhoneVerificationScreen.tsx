@@ -58,28 +58,28 @@ const PhoneVerificationScreen: React.FC<Props> = ({ navigation, route }) => {
         return;
       }
 
-      // Bestätige den Code
+      // Confirm the verification code
       const userCredential = await authService.confirmPhoneCode(confirmation, code);
       const user = userCredential.user;
 
-      // Bei neuem User: Profil mit displayName aktualisieren und User-Dokument erstellen
+      // For new users: Update profile with displayName and create user document
       if (isNewUser) {
         if (displayName) {
           await user.updateProfile({ displayName });
         }
         
-        // Erstelle User-Dokument in Database
+        // Create user document in Database
         await authService.createUserDocument(user, { displayName });
       } else {
-        // Bei bestehendem User: Prüfe ob User-Dokument existiert, falls nicht erstelle es
+        // For existing users: Check if user document exists, if not create it
         const userProfile = await authService.getUserProfile(user.uid);
         if (!userProfile) {
           await authService.createUserDocument(user, { displayName: user.displayName || undefined });
         }
       }
 
-      // Navigation wird automatisch durch AuthContext gehandhabt
-      // Die App wird den User automatisch zur Hauptseite navigieren
+      // Navigation is automatically handled by AuthContext
+      // The app will automatically navigate the user to the main screen
     } catch (error: any) {
       let message = 'The verification code is incorrect';
       
@@ -109,7 +109,7 @@ const PhoneVerificationScreen: React.FC<Props> = ({ navigation, route }) => {
     try {
       const confirmation = await authService.sendPhoneVerification(phoneNumber);
       
-      // Update route params mit neuem confirmation
+      // Update route params with new confirmation
       navigation.setParams({ 
         confirmation, 
         phoneNumber,
@@ -118,7 +118,7 @@ const PhoneVerificationScreen: React.FC<Props> = ({ navigation, route }) => {
       } as any);
       
       setCountdown(60);
-      setCode(''); // Code zurücksetzen
+      setCode(''); // Reset code
       Alert.alert('Success', 'A new verification code has been sent');
     } catch (error: any) {
       let message = 'Failed to resend verification code';

@@ -29,13 +29,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [userProfile, setUserProfile] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Auto-login bei App-Start mit onAuthStateChanged Listener
+  // Auto-login on app start with onAuthStateChanged listener
   useEffect(() => {
     const unsubscribe = authService.onAuthStateChanged(async (firebaseUser) => {
       setUser(firebaseUser);
       
       if (firebaseUser) {
-        // Lade User-Profil aus Database
+        // Load user profile from Database
         try {
           const profile = await authService.getUserProfile(firebaseUser.uid);
           setUserProfile(profile);
@@ -89,7 +89,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 };
 
 /**
- * Hook für einfachen Zugriff auf Auth Context
+ * Hook for easy access to Auth Context
  */
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);

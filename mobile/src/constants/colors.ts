@@ -1,5 +1,5 @@
 const colors = {
-  // Primär (aus Web-App übernommen)
+  // Primary (from Web App)
   primary: '#0288D1',
   primaryLight: '#29B6F6',
   primaryDark: '#01579B',
@@ -34,6 +34,6 @@ const colors = {
   overlay: 'rgba(0, 0, 0, 0.5)',
 };
 
-// Export als COLORS für Kompatibilität mit Screens
+// Export as COLORS for compatibility with screens
 export const COLORS = colors;
 export default colors;

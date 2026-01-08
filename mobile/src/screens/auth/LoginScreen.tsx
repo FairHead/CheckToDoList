@@ -36,7 +36,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
       return;
     }
 
-    // Validiere E.164 Format
+    // Validate E.164 Format
     if (!phoneNumber.startsWith('+')) {
       Alert.alert('Error', 'Phone number must start with + and country code (e.g., +49)');
       return;

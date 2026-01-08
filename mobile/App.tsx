@@ -34,7 +34,7 @@ import { COLORS } from './src/constants/colors';
 const Stack = createNativeStackNavigator();
 
 /**
- * Auth Navigator - Screens für nicht-authentifizierte User
+ * Auth Navigator - Screens for unauthenticated users
  */
 const AuthNavigator = () => {
   return (
@@ -53,7 +53,7 @@ const AuthNavigator = () => {
 };
 
 /**
- * Main Navigator - Placeholder für authentifizierte User
+ * Main Navigator - Placeholder for authenticated users
  * TODO: Issue #8 - Full navigation implementation
  */
 const MainNavigator = () => {
@@ -77,7 +77,7 @@ const MainNavigator = () => {
 };
 
 /**
- * Loading Screen während Auth-Status-Check
+ * Loading Screen during auth status check
  */
 const LoadingScreen = () => {
   return (
@@ -89,7 +89,7 @@ const LoadingScreen = () => {
 };
 
 /**
- * App Root mit Navigation
+ * App Root with Navigation
  */
 const AppRoot = () => {
   const { user, loading } = useAuth();

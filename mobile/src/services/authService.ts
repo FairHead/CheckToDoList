@@ -89,7 +89,7 @@ export const sendPhoneVerification = async (
   phoneNumber: string
 ): Promise<FirebaseAuthTypes.ConfirmationResult> => {
   try {
-    // Validierung: E.164 Format (beginnt mit +)
+    // Validation: E.164 Format (must start with +)
     if (!phoneNumber.startsWith('+')) {
       throw new Error('Phone number must be in E.164 format (e.g., +491234567890)');
     }

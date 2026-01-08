@@ -34,7 +34,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
-    // Validierung
+    // Validation
     if (!displayName.trim()) {
       Alert.alert('Error', 'Please enter your name');
       return;
@@ -50,7 +50,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
       return;
     }
 
-    // Validiere E.164 Format
+    // Validate E.164 Format
     if (!phoneNumber.startsWith('+')) {
       Alert.alert('Error', 'Phone number must start with + and country code (e.g., +49)');
       return;

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDoList</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <script defer src="app.js"></script>
+</head>
+<body>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+  <header class="mdl-layout__header">   
+    <div class="mdl-layout__header-row">
+      <span class="mdl-layout-title">To-DoList</span>
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation mdl-layout--large-screen-only">
+        <a class="mdl-navigation__link" href="#">Home</a>
+        <a class="mdl-navigation__link" href="#">About</a>
+        <a class="mdl-navigation__link" href="#">Contact</a>
+        </nav>
+    </div>
+  </header>
+  <div class="mdl-layout__drawer">
+    <span class="mdl-layout__title">To-DoList</span>
+    <nav class="mdl-navigation">
+        <a class="mdl-navigation__link" href="#">Home</a>
+        <a class="mdl-navigation__link" href="#">About</a>
+        <a class="mdl-navigation__link" href="#">Contact</a>
+    </nav>
+  </div>
+  <main class="mdl-layout__content">
+    <!-- Top Bar mit Button -->
+    <div class="top-bar">
+      <span class="create-list-text" onclick="showNewListDialog()">Erstelle Liste</span>
+      <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored add-list-btn" onclick="showNewListDialog()">
+        <i class="material-icons">add</i>
+      </button>
+    </div>
+
+    <!-- Grid für Listen -->
+    <div class="lists-grid" id="listsGrid">
+      <!-- Listen werden hier dynamisch eingefügt -->
+    </div>
+
+    <!-- Dialog für neue Liste -->
+    <div class="dialog-overlay" id="newListDialog">
+      <div class="dialog-box">
+        <h4>Neue Liste erstellen</h4>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" id="listNameInput">
+          <label class="mdl-textfield__label" for="listNameInput">Listenname...</label>
+        </div>
+        <div class="dialog-buttons">
+          <button class="mdl-button mdl-js-button" onclick="hideNewListDialog()">Abbrechen</button>
+          <button class="mdl-button mdl-js-button mdl-button--colored" onclick="createNewList()">Erstellen</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dialog für neues Item -->
+    <div class="dialog-overlay" id="newItemDialog">
+      <div class="dialog-box">
+        <h4>Neues Item hinzufügen</h4>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" id="itemInput">
+          <label class="mdl-textfield__label" for="itemInput">Neues Item...</label>
+        </div>
+        <div class="dialog-buttons">
+          <button class="mdl-button mdl-js-button" onclick="hideNewItemDialog()">Abbrechen</button>
+          <button class="mdl-button mdl-js-button mdl-button--colored" onclick="addItemToList()">Hinzufügen</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dialog für Liste umbenennen -->
+    <div class="dialog-overlay" id="renameListDialog">
+      <div class="dialog-box">
+        <h4>Liste umbenennen</h4>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" id="renameListInput">
+          <label class="mdl-textfield__label" for="renameListInput">Neuer Name...</label>
+        </div>
+        <div class="dialog-buttons">
+          <button class="mdl-button mdl-js-button" onclick="hideRenameListDialog()">Abbrechen</button>
+          <button class="mdl-button mdl-js-button mdl-button--colored" onclick="renameList()">Umbenennen</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dialog für Item bearbeiten -->
+    <div class="dialog-overlay" id="editItemDialog">
+      <div class="dialog-box">
+        <h4>Item bearbeiten</h4>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" id="editItemInput">
+          <label class="mdl-textfield__label" for="editItemInput">Item Text...</label>
+        </div>
+        <div class="dialog-buttons">
+          <button class="mdl-button mdl-js-button" onclick="hideEditItemDialog()">Abbrechen</button>
+          <button class="mdl-button mdl-js-button mdl-button--colored" onclick="saveEditedItem()">Speichern</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bestätigungs-Dialog für Löschen -->
+    <div class="dialog-overlay" id="confirmDeleteDialog">
+      <div class="dialog-box">
+        <h4 id="confirmDeleteTitle">Löschen bestätigen</h4>
+        <p id="confirmDeleteMessage">Möchtest du dieses Element wirklich löschen?</p>
+        <div class="dialog-buttons">
+          <button class="mdl-button mdl-js-button" onclick="hideConfirmDeleteDialog()">Abbrechen</button>
+          <button class="mdl-button mdl-js-button mdl-button--accent" onclick="confirmDelete()">Löschen</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

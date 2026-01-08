@@ -1,0 +1,285 @@
+.mdl-layout__content {
+    background-color: #29B6F6; /* Hellblauer Hintergrund */
+}
+
+.page-content {
+    padding: 20px;
+    color: white;
+}
+
+/* Placeholder Label in hellem Grau */
+.mdl-textfield__label {
+    color: #b0b0b0;
+}
+
+/* Unterstrich in derselben Farbe wie Placeholder */
+.mdl-textfield::after {
+    background-color: #b0b0b0;
+}
+
+/* Eingabetext in weiß */
+.mdl-textfield__input {
+    color: white;
+}
+
+.mdl-button--colored{
+    margin: 0px 10px 10px 0px;
+}
+
+.mdl-list__item{
+    color: #333;
+}
+
+/* Header Farbe anpassen */
+.mdl-layout__header {
+    background-color: #0288D1;
+}
+
+/* Listen Grid - 3 Spalten, beliebig viele Reihen */
+.lists-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 420px; /* Feste Höhe für alle Listen */
+    gap: 15px;
+    padding: 0 15px 15px 15px;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+/* Einzelne Listen-Box */
+.list-box {
+    background-color: #f5f5f5;
+    border-radius: 15px;
+    border: 3px solid #0288D1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 420px; /* Feste Höhe */
+}
+
+.list-box-header {
+    background-color: #fff;
+    padding: 10px 15px;
+    font-weight: bold;
+    color: #0288D1;
+    border-bottom: 2px solid #0288D1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.list-box-header span {
+    flex: 1;
+}
+
+.list-box-header .add-item-btn {
+    min-width: 30px;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    background-color: #0288D1;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.list-box-header .add-item-btn .material-icons {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.list-box-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.list-box-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.list-box-content li {
+    padding: 8px 10px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.list-box-content li:last-child {
+    border-bottom: none;
+}
+
+.list-box-content input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #0288D1;
+}
+
+.list-box-content .item-text {
+    flex: 1;
+}
+
+.list-box-content .item-text.completed {
+    text-decoration: line-through;
+    color: #999;
+}
+
+/* Item Actions */
+.item-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.item-actions button {
+    min-width: 24px;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #666;
+    border-radius: 50%;
+}
+
+.item-actions button:hover {
+    background-color: #e0e0e0;
+    color: #0288D1;
+}
+
+.item-actions .material-icons {
+    font-size: 15px;
+}
+
+/* List Footer */
+.list-box-footer {
+    background-color: #fff;
+    padding: 8px 15px;
+    border-top: 2px solid #0288D1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+}
+
+.list-box-footer button {
+    min-width: 32px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #0288D1;
+    border-radius: 50%;
+}
+
+.list-box-footer button:hover {
+    background-color: #e3f2fd;
+}
+
+.list-box-footer button.delete-btn:hover {
+    background-color: #ffebee;
+    color: #d32f2f;
+}
+
+.list-box-footer .material-icons {
+    font-size: 20px;
+}
+
+/* Top Bar */
+.top-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 15px 20px;
+    gap: 10px;
+    position: relative;
+    z-index: 10;
+}
+
+.create-list-text {
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+}
+
+.create-list-text:hover {
+    text-decoration: underline;
+}
+
+/* FAB Button für neue Liste */
+.add-list-btn {
+    background-color: #0288D1 !important;
+    cursor: pointer;
+}
+
+/* Dialog Overlay */
+.dialog-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.dialog-overlay.active {
+    display: flex;
+}
+
+.dialog-box {
+    background-color: white;
+    padding: 20px 30px;
+    border-radius: 10px;
+    min-width: 300px;
+}
+
+.dialog-box h4 {
+    margin-top: 0;
+    color: #0288D1;
+}
+
+.dialog-box .mdl-textfield {
+    width: 100%;
+}
+
+.dialog-box .mdl-textfield__input {
+    color: #333;
+}
+
+.dialog-box .mdl-textfield__label {
+    color: #999;
+}
+
+.dialog-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Scrollbar Styling */
+.list-box-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.list-box-content::-webkit-scrollbar-track {
+    background: #e0e0e0;
+    border-radius: 3px;
+}
+
+.list-box-content::-webkit-scrollbar-thumb {
+    background: #0288D1;
+    border-radius: 3px;
+}
+
